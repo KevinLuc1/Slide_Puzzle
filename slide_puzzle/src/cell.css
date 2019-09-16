@@ -2,13 +2,22 @@
   height: 100px;
   width: 100px;
   /*background-color: #263238;*/
-  transition: background-color 0.5s ease;
-  border-radius: 1px
+  /*transition: background-color 0.5s ease;*/
+  /*border-radius: 5px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;*/
 }
 
-.Cell-lit {
-  /*background-color: #00bcd4;*/
-  transition: background-color 0.5s ease;
-  border-radius: 1px;
+.Cell-dark {
+	border-width: 5px;
+  	border-style: solid;
+  	border-color: black;
+	
+}
 
+.Cell-matched {
+	border-width: 5px;
+ 	border-style: solid;
+  	border-color: red;
 }
