@@ -10,7 +10,7 @@ class Cell extends Component {
 	handleClick(e) {
 		// calls the board to flip cell with blank cell
 		// alert("hello")
-		// this.props.flipCells();
+		this.props.flipCells();
     
 	}
 

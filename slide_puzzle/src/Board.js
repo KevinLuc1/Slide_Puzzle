@@ -9,6 +9,7 @@ class Board extends Component {
 	static defaultProps = {
 	    numRows: 5,
 	    numCols: 5,
+	    // images: this.chunkArray(allImages(), 5)
 	}
 	constructor(props) {
 		super(props);
@@ -16,7 +17,9 @@ class Board extends Component {
     	//the initial state
     	this.state = {
       		hasWon: false,
-      		board: this.createBoard()
+      		board: this.createBoard(),
+      		randomBoard: this.makeRandom()
+      		
 
     	}
 	}
@@ -34,9 +37,9 @@ class Board extends Component {
 
 
     	//makes list of coordinates
-    	for (let i = 0; i < 5; i++) {
+    	for (let i = 0; i < this.props.numRows; i++) {
     		let row = [];
-    		for (let j = 0; j < 5; j++ ){
+    		for (let j = 0; j < this.props.numCols; j++ ){
     			let imageData = fiveByFive[i][j]
     			row.push(imageData)
     		}
@@ -47,37 +50,68 @@ class Board extends Component {
     	return board;
     }
 
+    makeRandom() {
+    	let randomBoard = []
 
-    makeBoard(){
-		let randomImages = this.shuffle(allImages())
+    	let randomImages = this.shuffle(allImages())
 		// let randomImages = this.shuffle(immy)
 
 		// creates a list of 5 arrays with 5 image each
 		let fiveByFive = this.chunkArray(randomImages, 5)
 
+    	for (let i = 0; i < this.props.numRows; i++) {
+    		let row = [];
+    		for (let j = 0; j < this.props.numCols; j++ ){
+    			let imageData = fiveByFive[i][j]
+    			row.push(imageData)
+    		}
+    		randomBoard.push(row)
+    	}
+
+    	return randomBoard;
+
+
+    }
+
+
+    makeBoard(){
+		// let randomImages = this.shuffle(allImages())
+		// // let randomImages = this.shuffle(immy)
+
+		// // creates a list of 5 arrays with 5 image each
+		// let fiveByFive = this.chunkArray(randomImages, 5)
+
 
 		let tableboard = [];
 
 
-		for (let z = 0; z < fiveByFive.length; z++){
+		for (let z = 0; z < this.props.numRows; z++){
 			let row = [];
-			for (let y = 0; y < this.props.numRows; y++){
+			for (let y = 0; y < this.props.numCols; y++){
+				let coord = `${z}-${y}`
 
 				row.push(
 					
 					
 					<Cell 
-					correctImage = {this.state.board[z][y]}
-					currentImage = {fiveByFive[z][y]}
-					// isMatch is true if currentImage === correctImage
-					isMatch = {this.state.board[z][y] === fiveByFive[z][y]}
-					// this will be the dark square
-					isDark = {this.state.board[4][4] === fiveByFive[z][y]}
-					imgSrc={fiveByFive[z][y]} />
+						key={coord}
+						// fixed = {this.state.fixedImages[z][y]}s
+						correctImage = {this.state.board[z][y]}
+						currentImage = {this.state.randomBoard[z][y]}
+						// isMatch is true if currentImage === correctImage
+						isMatch = {this.state.board[z][y] === this.state.randomBoard[z][y]}
+						// this will be the dark square
+						isDark = {this.state.board[4][4] === this.state.randomBoard[z][y]}
+						imgSrc={this.state.randomBoard[z][y]}
+
+						//arrow function to prevent an automatic run
+						flipCells={() => this.flipClickedCell(coord, this.state.randomBoard[z][y])}
+
+					/>
 					
-					)
+				)
 				
-				}
+			}
 			tableboard.push(<tr>{row}</tr>)
 		}
 
@@ -87,6 +121,17 @@ class Board extends Component {
 
 
   	
+
+    }
+
+    flipClickedCell(coord, clickedImage){
+
+    	let randomBoard = this.state.randomBoard
+
+    	console.log(randomBoard)
+    	// this.setState()
+
+    	alert("you clicked on coordinate " + coord)
 
     }
 
@@ -101,7 +146,7 @@ class Board extends Component {
    		return(array)
     }
 
-    // to split randomized images into 5 x 5
+    // to split images into 5 x 5
 	chunkArray(myArray, chunk_size){
 		// let i = 0;
 	    let tempArray = [];
