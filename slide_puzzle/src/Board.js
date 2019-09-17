@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Cell from "./Cell";
 import "./board.css";
 import { allImages } from "./ImageFolder"
+import blankImg from "./Images/image_part_025.jpg"
 
 // import img1 from "./public/Images/image_part_001.jpg";
 
@@ -18,7 +19,8 @@ class Board extends Component {
     	this.state = {
       		hasWon: false,
       		board: this.createBoard(),
-      		randomBoard: this.makeRandom()
+      		randomBoard: this.makeRandom(),
+      		blankImg: blankImg
       		
 
     	}
@@ -26,6 +28,16 @@ class Board extends Component {
 
 	// create board to create coordinate keys to pass into makeBoard()
 	//  these coord's will becomes the keys to each Cell
+	blankImg(){
+		let image = [];
+		let blankImg = allImages()
+
+		image.push(blankImg[24])
+
+		return image
+
+	}
+
 	createBoard() {
 		
 
@@ -45,7 +57,7 @@ class Board extends Component {
     		}
     		board.push(row)
     	}
-
+    	 console.log()
     	
     	return board;
     }
@@ -88,7 +100,8 @@ class Board extends Component {
 		for (let z = 0; z < this.props.numRows; z++){
 			let row = [];
 			for (let y = 0; y < this.props.numCols; y++){
-				let coord = `${z}-${y}`
+				let coord = `${z}-${y}`;
+
 
 				row.push(
 					
@@ -116,7 +129,6 @@ class Board extends Component {
 		}
 
 
-		// maybe try like the instructor board .js, initialize a correct image in create.board()
 		return tableboard
 
 
@@ -125,13 +137,45 @@ class Board extends Component {
     }
 
     flipClickedCell(coord, clickedImage){
-
+    	// copy down the current state of the randomBoard
     	let randomBoard = this.state.randomBoard
 
-    	console.log(randomBoard)
-    	// this.setState()
+    	//  use Number function to convert y,x string into y,x numbers
+    	let [y, x] = coord.split("-").map(Number)
 
-    	alert("you clicked on coordinate " + coord)
+    	// locate the current coordinates of the blank image
+    	let locationOfBlankIMG = []
+    	for (let i = 0; i < 5; i++){
+    		for (let j = 0; j < 5; j++){
+				// if the image data at randomBoardij is equal to the blank image
+				// give me the i and j coordinates 
+    			if (this.state.randomBoard[i][j] === this.state.board[4][4]) {
+    				locationOfBlankIMG.push(i,j)
+    			}
+    		}
+
+    	}
+    	console.log(locationOfBlankIMG)
+
+    	if (y+1 === locationOfBlankIMG[0] && x+1 === locationOfBlankIMG[1]) {
+    		console.log("corect target")
+    	}
+
+
+   //  	if (x >= 0 && x < numCols && y >= 0 && y < numRows){
+			// 	board[y][x] = !board[y][x];
+			// }
+
+    	// set the clicked image to become blank image
+    	randomBoard[y][x] = blankImg
+
+    	// set the current location of blank image to clickedImage
+    	randomBoard[locationOfBlankIMG[0]][locationOfBlankIMG[1]] = clickedImage
+
+ 
+    
+
+    	this.setState(randomBoard)
 
     }
 
