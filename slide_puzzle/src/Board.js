@@ -108,9 +108,8 @@ class Board extends Component {
 					
 					<Cell 
 						key={coord}
-						// fixed = {this.state.fixedImages[z][y]}s
-						correctImage = {this.state.board[z][y]}
-						currentImage = {this.state.randomBoard[z][y]}
+						// correctImage = {this.state.board[z][y]}
+						// currentImage = {this.state.randomBoard[z][y]}
 						// isMatch is true if currentImage === correctImage
 						isMatch = {this.state.board[z][y] === this.state.randomBoard[z][y]}
 						// this will be the dark square
@@ -143,7 +142,7 @@ class Board extends Component {
     	//  use Number function to convert y,x string into y,x numbers
     	let [y, x] = coord.split("-").map(Number)
 
-    	// locate the current coordinates of the blank image
+    	// locate the current coordinates of the blank image inside randomBoard
     	let locationOfBlankIMG = []
     	for (let i = 0; i < 5; i++){
     		for (let j = 0; j < 5; j++){
@@ -155,22 +154,35 @@ class Board extends Component {
     		}
 
     	}
-    	console.log(locationOfBlankIMG)
-
-    	if (y+1 === locationOfBlankIMG[0] && x+1 === locationOfBlankIMG[1]) {
-    		console.log("corect target")
+ 
+    	// if cell below blank image clicked
+    	if (y === locationOfBlankIMG[0]+1 && x === locationOfBlankIMG[1]) {
+    		swapCells()
+    	}
+    	//if cell above blank image clicked
+    	if (y === locationOfBlankIMG[0]-1 && x === locationOfBlankIMG[1]) {
+    		swapCells()
+    	}
+    	//if cell to right of blank image clicked
+    	if (y === locationOfBlankIMG[0] && x === locationOfBlankIMG[1]+1) {
+    		swapCells()
+    	}
+    	//if cell to left of blank image clicked
+    	if (y === locationOfBlankIMG[0] && x === locationOfBlankIMG[1]-1) {
+    		swapCells()
     	}
 
 
-   //  	if (x >= 0 && x < numCols && y >= 0 && y < numRows){
-			// 	board[y][x] = !board[y][x];
-			// }
 
-    	// set the clicked image to become blank image
-    	randomBoard[y][x] = blankImg
+		function swapCells(){
+	    	// set the clicked image to become blank image
+	    	randomBoard[y][x] = blankImg
 
-    	// set the current location of blank image to clickedImage
-    	randomBoard[locationOfBlankIMG[0]][locationOfBlankIMG[1]] = clickedImage
+	    	// set the current location of blank image to clickedImage
+	    	randomBoard[locationOfBlankIMG[0]][locationOfBlankIMG[1]] = clickedImage
+
+		}
+
 
  
     
