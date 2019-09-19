@@ -1,8 +1,13 @@
 .App {
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  /*background-color: #DE3737*/
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/*height: 200vh;*/
+	/*background-color: #DE3737*/
+	background-position: center center;
+	background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8tS3cFZSacjdXH9wwk4_3CiSklBOKMg0Y32FdLtcDqdFXSBw);
+
+	
+
 }

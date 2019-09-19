@@ -3,14 +3,14 @@ import Cell from "./Cell";
 import "./board.css";
 import { allImages } from "./ImageFolder"
 import blankImg from "./Images/image_part_025.jpg"
+import fullPicture from "./Images/mario.jpg"
 
-// import img1 from "./public/Images/image_part_001.jpg";
+
 
 class Board extends Component {
 	static defaultProps = {
 	    numRows: 5,
 	    numCols: 5,
-	    // images: this.chunkArray(allImages(), 5)
 	}
 	constructor(props) {
 		super(props);
@@ -26,8 +26,7 @@ class Board extends Component {
     	}
 	}
 
-	// create board to create coordinate keys to pass into makeBoard()
-	//  these coord's will becomes the keys to each Cell
+
 	blankImg(){
 		let image = [];
 		let blankImg = allImages()
@@ -65,11 +64,11 @@ class Board extends Component {
     makeRandom() {
     	let randomBoard = []
 
-    	let randomImages = this.shuffle(allImages())
-		// let randomImages = this.shuffle(immy)
+    	//save sorted images
+  		let imagesToShuffle = allImages();
 
-		// creates a list of 5 arrays with 5 image each
-		let fiveByFive = this.chunkArray(randomImages, 5)
+  		//convert into 
+  		let fiveByFive = this.chunkArray(imagesToShuffle, 5)
 
     	for (let i = 0; i < this.props.numRows; i++) {
     		let row = [];
@@ -78,21 +77,81 @@ class Board extends Component {
     			row.push(imageData)
     		}
     		randomBoard.push(row)
+    	}  		
+
+    	// we will start with a solved puzzle, making valid moves over and over
+    	// to randomize it, kind of like a rubics cube
+    	function randomSwap(){
+
+	    	//starting blank cell
+	    	let [y, x] = [4, 4]
+
+
+    		for (let i = 0; i < 10000; i++) {
+
+	    		let roll = Math.floor(Math.random() *4);
+
+
+	    		// x|0|x
+	    		// 3|x|1
+	    		// x|2|x
+	    		// 0 flips up, 1 flips right, 2 flips down, 3 flips left
+	    		if (roll === 0){
+	    			let next = y - 1;
+	    			if (next >=0 && next <5){
+	    				let temp = randomBoard[y][x]
+
+	    				randomBoard[y][x] = randomBoard[next][x]
+	    				randomBoard[next][x] = temp
+	    				y = next
+	    				
+	    			} 
+
+	    		}
+	    		else if (roll === 1){
+	    			let next = (x + 1);
+	    			if (next >=0 && next <5){
+	    				let temp = randomBoard[y][x]
+
+	    				randomBoard[y][x] = randomBoard[y][next]
+	    				randomBoard[y][next] = temp
+	    				x = next
+	    			} 
+
+	    		}
+	    		else if (roll === 2){
+	    			let next = (y + 1);
+	    			if (next >=0 && next <5){
+	    				let temp = randomBoard[y][x]
+
+	    				randomBoard[y][x] = randomBoard[next][x]
+	    				randomBoard[next][x] = temp
+	    				y = next
+	    			} 
+	    		}
+	    		else {
+	    			let next = (x - 1);
+	    			if (next >=0 && next <5){
+	    				let temp = randomBoard[y][x]
+
+	    				randomBoard[y][x] = randomBoard[y][next]
+	    				randomBoard[y][next] = temp
+	    				x = next
+	    			} 
+
+	    		}
+	    	}
+
     	}
 
-    	return randomBoard;
+    	randomSwap();
 
+    	return randomBoard;
 
     }
 
 
     makeBoard(){
-		// let randomImages = this.shuffle(allImages())
-		// // let randomImages = this.shuffle(immy)
-
-		// // creates a list of 5 arrays with 5 image each
-		// let fiveByFive = this.chunkArray(randomImages, 5)
-
 
 		let tableboard = [];
 
@@ -105,15 +164,12 @@ class Board extends Component {
 
 				row.push(
 					
-					
 					<Cell 
 						key={coord}
-						// correctImage = {this.state.board[z][y]}
-						// currentImage = {this.state.randomBoard[z][y]}
 						// isMatch is true if currentImage === correctImage
 						isMatch = {this.state.board[z][y] === this.state.randomBoard[z][y]}
 						// this will be the dark square
-						isDark = {this.state.board[4][4] === this.state.randomBoard[z][y]}
+						// isDark = {this.state.board[4][4] === this.state.randomBoard[z][y]}
 						imgSrc={this.state.randomBoard[z][y]}
 
 						//arrow function to prevent an automatic run
@@ -124,7 +180,7 @@ class Board extends Component {
 				)
 				
 			}
-			tableboard.push(<tr>{row}</tr>)
+			tableboard.push(<tr key={z}>{row}</tr>)
 		}
 
 
@@ -138,6 +194,7 @@ class Board extends Component {
     flipClickedCell(coord, clickedImage){
     	// copy down the current state of the randomBoard
     	let randomBoard = this.state.randomBoard
+    	let board = this.state.board
 
     	//  use Number function to convert y,x string into y,x numbers
     	let [y, x] = coord.split("-").map(Number)
@@ -183,9 +240,22 @@ class Board extends Component {
 
 		}
 
+		let hasWon = isWinner()
 
- 
-    
+		// if every random image matched the sorted image, win
+		function isWinner() {
+			for (let i = 0; i< 5; i++){
+				for (let j = 0; j<5; j++){
+					if (board[i][j] === randomBoard[i][j] ){
+						return true
+					}
+					else {
+						return false
+					}
+				}
+			}
+		}
+		// console.log(hasWon)
 
     	this.setState(randomBoard)
 
@@ -204,13 +274,11 @@ class Board extends Component {
 
     // to split images into 5 x 5
 	chunkArray(myArray, chunk_size){
-		// let i = 0;
 	    let tempArray = [];
 	    
 	    for (let i = 0; i < myArray.length; i+= chunk_size) {
 	        let myChunk = myArray.slice(i, i+chunk_size);
-	        console.log()
-	        // Do something if you want with the group
+	 
 	        tempArray.push(myChunk);
 	    }
 
@@ -223,49 +291,30 @@ class Board extends Component {
 	// <Cell imgSrc={fiveByFive[z][y]} />
 
 	render() {
-
-		// // randomize list of images
-		// let randomImages = this.shuffle(allImages())
-
-		// // creates a list of 5 arrays with 5 image each
-		// let fiveByFive = this.chunkArray(randomImages, 5)
-
-
-		// let tableboard = [];
-
-
-		// for (let z = 0; z < fiveByFive.length; z++){
-		// 	let row = [];
-		// 	for (let y = 0; y < this.props.numRows; y++){
-		// 		row.push(
-					
-					
-		// 			<Cell imgSrc={fiveByFive[z][y]} />
-					
-		// 			)
-				
-		// 		}
-		// 	tableboard.push(<tr>{row}</tr>)
-		// 	}
-		
-
-
-
-
 		return (
 			<div>
-				<h1> hello</h1>
 				
-	  			<table className="Board">	
-	  				<tbody>
-	  					{this.makeBoard()}
-	  				</tbody>
-	  			</table>				
-				
-
-				
-
+				<div className="title"> Solve the Puzzle</div>
+				<div>
+	  				<table className="Board">	
+		  				<tbody>
+		  					{this.makeBoard()}
+		  				</tbody>
+		  			</table>
+	  			</div>	
+	  			<div>	
+	  				{this.state.hasWon ? (<h1 className="title">WINNER</h1>) : (	
+	  				<div>	
+		  				<div className="title"> Solution</div>
+						<div> <img src={fullPicture} className="fullPicture" /> </div>
+					</div>
+					)}
+				</div>
 			</div>
+
+
+
+
 			)
 	}
 
