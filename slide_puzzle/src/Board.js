@@ -21,9 +21,8 @@ class Board extends Component {
       		board: this.createBoard(),
       		randomBoard: this.makeRandom(),
       		blankImg: blankImg
-      		
-
     	}
+    	this.reset = this.reset.bind(this)
 	}
 
 
@@ -67,7 +66,7 @@ class Board extends Component {
     	//save sorted images
   		let imagesToShuffle = allImages();
 
-  		//convert into 
+  		//convert into 5x5
   		let fiveByFive = this.chunkArray(imagesToShuffle, 5)
 
     	for (let i = 0; i < this.props.numRows; i++) {
@@ -143,11 +142,8 @@ class Board extends Component {
 	    	}
 
     	}
-
     	randomSwap();
-
     	return randomBoard;
-
     }
 
 
@@ -161,15 +157,13 @@ class Board extends Component {
 			for (let y = 0; y < this.props.numCols; y++){
 				let coord = `${z}-${y}`;
 
-
 				row.push(
 					
 					<Cell 
 						key={coord}
 						// isMatch is true if currentImage === correctImage
 						isMatch = {this.state.board[z][y] === this.state.randomBoard[z][y]}
-						// this will be the dark square
-						// isDark = {this.state.board[4][4] === this.state.randomBoard[z][y]}
+						
 						imgSrc={this.state.randomBoard[z][y]}
 
 						//arrow function to prevent an automatic run
@@ -186,8 +180,6 @@ class Board extends Component {
 
 		return tableboard
 
-
-  	
 
     }
 
@@ -240,37 +232,40 @@ class Board extends Component {
 
 		}
 
-		let hasWon = isWinner()
+		let win = isWinner()
 
 		// if every random image matched the sorted image, win
 		function isWinner() {
+			let allMatching = false
+			let score = 0
 			for (let i = 0; i< 5; i++){
 				for (let j = 0; j<5; j++){
 					if (board[i][j] === randomBoard[i][j] ){
-						return true
-					}
-					else {
-						return false
+						score += 1
 					}
 				}
 			}
+			if (score === 25){
+				allMatching = true
+			}
+			return allMatching
 		}
-		// console.log(hasWon)
-
-    	this.setState(randomBoard)
-
+    	this.setState({randomBoard, hasWon:win})
     }
 
 
 
     // to randomize the images
-    shuffle(array){
-    	for (let i = array.length - 1; i > 0; i--) {
-        	const j = Math.floor(Math.random() * (i + 1));
-        	[array[i], array[j]] = [array[j], array[i]];
-   		}
-   		return(array)
-    }
+    //this function no longer useful as it can create unsolvable puzzles
+
+    // shuffle(array){
+    // 	for (let i = array.length - 1; i > 0; i--) {
+    //     	const j = Math.floor(Math.random() * (i + 1));
+    //     	[array[i], array[j]] = [array[j], array[i]];
+   	// 	}
+   	// 	return(array)
+    // }
+
 
     // to split images into 5 x 5
 	chunkArray(myArray, chunk_size){
@@ -285,10 +280,14 @@ class Board extends Component {
 	    return tempArray;
 	}
 
+	reset() {
+	    this.setState({
+	      hasWon: false,
+	      randomBoard: this.makeRandom()
+	      
+	    });
+	}
 
-
-
-	// <Cell imgSrc={fiveByFive[z][y]} />
 
 	render() {
 		return (
@@ -301,7 +300,12 @@ class Board extends Component {
 		  					{this.makeBoard()}
 		  				</tbody>
 		  			</table>
-	  			</div>	
+	  			</div>
+
+	  			<button id='reset' onClick={this.reset}>
+		          	Restart?
+		        </button>
+
 	  			<div>	
 	  				{this.state.hasWon ? (<h1 className="title">WINNER</h1>) : (	
 	  				<div>	
