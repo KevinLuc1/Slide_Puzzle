@@ -37,7 +37,6 @@ class Board extends Component {
 	}
 
 	createBoard() {
-		
 
 		let board = [];
 
@@ -293,7 +292,12 @@ class Board extends Component {
 		return (
 			<div>
 				
-				<div className="title"> Solve the Puzzle</div>
+				<div className="title"> {this.state.hasWon ?
+					("WINNER!") :
+					("Solve the Puzzle")
+
+					}
+				</div>
 				<div>
 	  				<table className="Board">	
 		  				<tbody>
@@ -307,7 +311,7 @@ class Board extends Component {
 		        </button>
 
 	  			<div>	
-	  				{this.state.hasWon ? (<h1 className="title">WINNER</h1>) : (	
+	  				{this.state.hasWon ? ("") : (	
 	  				<div>	
 		  				<div className="title"> Solution</div>
 						<div> <img src={fullPicture} className="fullPicture" /> </div>
