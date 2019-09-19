@@ -1,3 +1,10 @@
+Live Demo: https://frozen-tundra-81086.herokuapp.com/
+
+How to play: Click the tiles/squares directly adjacent to the black square until the puzzle is solved. The black square's final location is on the bottom right.
+
+ 
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
