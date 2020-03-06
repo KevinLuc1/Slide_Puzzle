@@ -25,17 +25,9 @@ class Board extends Component {
     	this.reset = this.reset.bind(this)
 	}
 
+	
 
-	blankImg(){
-		let image = [];
-		let blankImg = allImages()
-
-		image.push(blankImg[24])
-
-		return image
-
-	}
-
+	//initialize into the state the correct set of images
 	createBoard() {
 
 		let board = [];
@@ -59,6 +51,7 @@ class Board extends Component {
     	return board;
     }
 
+    //initialize into state a randomized set of images
     makeRandom() {
     	let randomBoard = []
 
@@ -93,7 +86,8 @@ class Board extends Component {
 	    		// x|0|x
 	    		// 3|x|1
 	    		// x|2|x
-	    		// 0 flips up, 1 flips right, 2 flips down, 3 flips left
+
+	    		// roll a 0 = flip up, 1 flips right, 2 flips down, 3 flips left
 	    		if (roll === 0){
 	    			let next = y - 1;
 	    			if (next >=0 && next <5){
@@ -145,7 +139,7 @@ class Board extends Component {
     	return randomBoard;
     }
 
-
+    // to render
     makeBoard(){
 
 		let tableboard = [];
@@ -160,7 +154,7 @@ class Board extends Component {
 					
 					<Cell 
 						key={coord}
-						// isMatch is true if currentImage === correctImage
+						// isMatch is true if correct image === current image
 						isMatch = {this.state.board[z][y] === this.state.randomBoard[z][y]}
 						
 						imgSrc={this.state.randomBoard[z][y]}
@@ -185,10 +179,14 @@ class Board extends Component {
     flipClickedCell(coord, clickedImage){
     	// copy down the current state of the randomBoard
     	let randomBoard = this.state.randomBoard
+    	// copy down the correct set of board to compare against
     	let board = this.state.board
 
+    	// coord comes in as a string "3-4", we want to convert it into numbers 3 4 
     	//  use Number function to convert y,x string into y,x numbers
     	let [y, x] = coord.split("-").map(Number)
+
+
 
     	// locate the current coordinates of the blank image inside randomBoard
     	let locationOfBlankIMG = []
@@ -252,18 +250,6 @@ class Board extends Component {
     	this.setState({randomBoard, hasWon:win})
     }
 
-
-
-    // to randomize the images
-    //this function no longer useful as it can create unsolvable puzzles
-
-    // shuffle(array){
-    // 	for (let i = array.length - 1; i > 0; i--) {
-    //     	const j = Math.floor(Math.random() * (i + 1));
-    //     	[array[i], array[j]] = [array[j], array[i]];
-   	// 	}
-   	// 	return(array)
-    // }
 
 
     // to split images into 5 x 5
